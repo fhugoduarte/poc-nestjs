@@ -22,7 +22,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   await app.listen(3333, () => {
-    console.log('Ah ta babado!');
+    console.log('Namoradinha!');
   });
 }
 

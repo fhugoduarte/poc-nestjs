@@ -4,16 +4,14 @@ services:
   # Application
 
   app_database:
-    image: 'bitnami/postgresql'
+    image: 'kartoza/postgis'
     restart: always
     ports:
       - '5432:5432'
     environment:
-      - POSTGRESQL_USERNAME=docker
-      - POSTGRESQL_PASSWORD=docker
-      - POSTGRESQL_DATABASE=hidra
+      - POSTGRES_DBNAME=hidra
     volumes:
-      - 'postgresql_data:/bitnami/postgresql'
+      - 'postgresql_data:/var/lib/postgresql'
 
   zookeeper:
     image: 'bitnami/zookeeper:3'
