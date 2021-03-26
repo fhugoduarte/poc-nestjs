@@ -1,9 +1,14 @@
 type Query {
   users: [User]
+  address: Address
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput): User
+}
+
+type Subscription {
+  userCreated: User
 }
 
 type User {

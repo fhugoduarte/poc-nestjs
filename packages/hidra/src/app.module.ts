@@ -11,6 +11,7 @@ import { UsersResolver } from './app.resolver';
       typePaths: ['./**/*.graphql'],
       debug: true,
       playground: true,
+      installSubscriptionHandlers: true,
     }),
   ],
   controllers: [AppController],

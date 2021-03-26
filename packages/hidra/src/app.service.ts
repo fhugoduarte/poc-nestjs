@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { User, Address } from '@prisma/client';
 import { CreateUserInput } from './graphql.schema';
 
 import { PrismaService } from './prisma.service';
@@ -9,11 +9,7 @@ export class AppService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<User[]> {
-    return this.prisma.user.findMany({
-      include: {
-        address: true,
-      },
-    });
+    return this.prisma.user.findMany();
   }
 
   async createUser({ address, ...user }: CreateUserInput): Promise<User> {
@@ -27,5 +23,13 @@ export class AppService {
     });
 
     return data;
+  }
+
+  async findAddress(id: string): Promise<Address> {
+    return this.prisma.address.findFirst({
+      where: {
+        id,
+      },
+    });
   }
 }
