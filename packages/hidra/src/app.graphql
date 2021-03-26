@@ -23,5 +23,11 @@ type Address {
 input CreateUserInput {
   name: String!
   email: String!
-  address: Address!
+  address: CreateAddressInput!
+}
+
+input CreateAddressInput {
+  street: String!
+  city: String!
+  state: String!
 }
