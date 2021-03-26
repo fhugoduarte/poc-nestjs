@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { User, Address } from '@prisma/client';
-import { CreateUserInput } from './graphql.schema';
+import { CreateUserInput } from '../graphql.schema';
 
-import { PrismaService } from './prisma.service';
+import { PrismaService } from '../common/prisma.service';
 
 @Injectable()
-export class AppService {
+export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<User[]> {

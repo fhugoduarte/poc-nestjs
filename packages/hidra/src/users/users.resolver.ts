@@ -1,4 +1,3 @@
-import { ParseIntPipe, UseGuards } from '@nestjs/common';
 import {
   Args,
   Mutation,
@@ -9,24 +8,24 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
-import { CreateUserInput } from './graphql.schema';
+import { CreateUserInput } from '../graphql.schema';
 import { User } from '@prisma/client';
-import { AppService } from './app.service';
+import { UsersService } from './users.service';
 
 const pubSub = new PubSub();
 
 @Resolver('User')
 export class UsersResolver {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Query('users')
   async getUsers() {
-    return this.appService.findAll();
+    return this.usersService.findAll();
   }
 
   @Mutation('createUser')
   async create(@Args('createUserInput') args: CreateUserInput): Promise<User> {
-    const createdUser = await this.appService.createUser(args);
+    const createdUser = await this.usersService.createUser(args);
 
     pubSub.publish('userCreated', { userCreated: createdUser });
 
@@ -37,7 +36,7 @@ export class UsersResolver {
   async address(@Parent() user: User) {
     const { addressId } = user;
 
-    return this.appService.findAddress(addressId);
+    return this.usersService.findAddress(addressId);
   }
 
   @Subscription('userCreated')

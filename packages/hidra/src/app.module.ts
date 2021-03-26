@@ -1,20 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaService } from './prisma.service';
-import { GraphQLModule } from '@nestjs/graphql';
-import { UsersResolver } from './app.resolver';
+import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
-  imports: [
-    GraphQLModule.forRoot({
-      typePaths: ['./**/*.graphql'],
-      debug: true,
-      playground: true,
-      installSubscriptionHandlers: true,
-    }),
-  ],
+  imports: [CommonModule, UsersModule],
   controllers: [AppController],
-  providers: [AppService, UsersResolver, PrismaService],
 })
 export class AppModule {}
