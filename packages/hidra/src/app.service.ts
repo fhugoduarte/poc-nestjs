@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { CreateUserInput } from './graphql.schema';
 
 import { PrismaService } from './prisma.service';
 
@@ -15,7 +16,7 @@ export class AppService {
     });
   }
 
-  async createUser({ address, ...user }: any): Promise<User> {
+  async createUser({ address, ...user }: CreateUserInput): Promise<User> {
     const data = await this.prisma.user.create({
       data: {
         ...user,

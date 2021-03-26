@@ -10,7 +10,7 @@ type User {
   id: String!
   name: String!
   email: String!
-  address: Address
+  address: Address!
 }
 
 type Address {
@@ -23,5 +23,5 @@ type Address {
 input CreateUserInput {
   name: String!
   email: String!
-  address: Address
+  address: Address!
 }

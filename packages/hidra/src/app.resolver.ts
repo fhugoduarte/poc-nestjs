@@ -1,10 +1,11 @@
 import { ParseIntPipe, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
-import { User } from './graphql.schema';
+import { CreateUserInput } from './graphql.schema';
+import { User } from '@prisma/client';
 import { AppService } from './app.service';
 
-const pubSub = new PubSub();
+// const pubSub = new PubSub();
 
 @Resolver('User')
 export class UsersResolver {
@@ -24,7 +25,7 @@ export class UsersResolver {
   // }
 
   @Mutation('createUser')
-  async create(@Args('createUserInput') args: any): Promise<any> {
+  async create(@Args('createUserInput') args: CreateUserInput): Promise<User> {
     const createdUser = await this.appService.createUser(args);
     // pubSub.publish('catCreated', { catCreated: createdCat });
     return createdUser;
