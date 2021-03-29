@@ -1,8 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Purchase } from '@prisma/client';
+import { Product, Purchase } from '@prisma/client';
 
 import { PrismaService } from '../common/prisma.service';
 import { PurchaseMessageDTO } from './purchases.dto';
+
+export interface CreatePurchaseResponse extends Purchase {
+  product: Product;
+}
 
 @Injectable()
 export class PurchasesService {
@@ -12,7 +16,7 @@ export class PurchasesService {
     customer,
     product,
     id,
-  }: PurchaseMessageDTO): Promise<Purchase> {
+  }: PurchaseMessageDTO): Promise<CreatePurchaseResponse> {
     const { id: slug, ...productData } = product;
     const { address, ...customerData } = customer;
 
@@ -41,6 +45,9 @@ export class PurchasesService {
             },
           },
         },
+      },
+      include: {
+        product: true,
       },
     });
 
