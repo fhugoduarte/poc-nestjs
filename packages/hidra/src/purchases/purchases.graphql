@@ -1,11 +1,18 @@
 type Query {
-  purchases: [Purchase]
-  # purchase(id: String!): Purchase
+  purchases(page: Int): PurchasePagination
+  purchase(id: String!): Purchase
 }
 
 # type Mutation {
 #   refund(createUserInput: CreateUserInput): User
 # }
+
+type PurchasePagination {
+  data: [Purchase]
+  page: Int
+  perPage: Int
+  total: Int
+}
 
 type Purchase {
   id: String!

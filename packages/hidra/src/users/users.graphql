@@ -1,5 +1,6 @@
 type Query {
   users: [User]
+  user(id: String!): User
   address: Address
 }
 
@@ -16,6 +17,7 @@ type User {
   name: String!
   email: String!
   address: Address!
+  purchases(page: Int): [Purchase]
 }
 
 type Address {

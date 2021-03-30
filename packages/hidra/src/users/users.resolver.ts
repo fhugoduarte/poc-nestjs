@@ -23,6 +23,11 @@ export class UsersResolver {
     return this.usersService.findAll();
   }
 
+  @Query('user')
+  getUser(@Args('id') id: string) {
+    return this.usersService.findById(id);
+  }
+
   @Mutation('createUser')
   async create(@Args('createUserInput') args: CreateUserInput): Promise<User> {
     const createdUser = await this.usersService.createUser(args);
@@ -37,6 +42,13 @@ export class UsersResolver {
     const { addressId } = user;
 
     return this.usersService.findAddress(addressId);
+  }
+
+  @ResolveField()
+  purchases(@Parent() user: User, page = 1) {
+    const userId = user.id;
+
+    return this.usersService.findPurchases(userId, page);
   }
 
   @Subscription('userCreated')

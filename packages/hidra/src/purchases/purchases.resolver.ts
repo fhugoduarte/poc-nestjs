@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { PurchasesService } from './purchases.service';
 
@@ -7,7 +7,12 @@ export class PurchasesResolver {
   constructor(private readonly purchasesService: PurchasesService) {}
 
   @Query('purchases')
-  getPurchases() {
-    return this.purchasesService.findAll();
+  getPurchases(@Args('page') page: number) {
+    return this.purchasesService.findAll(page);
+  }
+
+  @Query('purchase')
+  getPurchase(@Args('id') id: string) {
+    return this.purchasesService.findById(id);
   }
 }

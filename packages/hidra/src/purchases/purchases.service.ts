@@ -12,6 +12,13 @@ interface RefundPurchaseResponse extends Purchase {
   product: Product;
 }
 
+interface Pagination {
+  data: Purchase[];
+  page: number;
+  total: number;
+  perPage: number;
+}
+
 @Injectable()
 export class PurchasesService {
   constructor(private prisma: PrismaService) {}
@@ -70,8 +77,10 @@ export class PurchasesService {
     });
   }
 
-  findAll(): Promise<Purchase[]> {
-    return this.prisma.purchase.findMany({
+  async findAll(page = 1): Promise<Pagination> {
+    const options = {
+      take: 10,
+      skip: (page - 1) * 10,
       include: {
         customer: {
           include: {
@@ -79,6 +88,34 @@ export class PurchasesService {
           },
         },
         product: true,
+      },
+    };
+
+    const [purchases, total] = await Promise.all([
+      this.prisma.purchase.findMany(options),
+      this.prisma.purchase.count(),
+    ]);
+
+    return {
+      page,
+      perPage: 10,
+      data: purchases,
+      total,
+    };
+  }
+
+  findById(id: string): Promise<Purchase> {
+    return this.prisma.purchase.findFirst({
+      include: {
+        customer: {
+          include: {
+            address: true,
+          },
+        },
+        product: true,
+      },
+      where: {
+        id,
       },
     });
   }

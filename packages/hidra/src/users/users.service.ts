@@ -12,6 +12,17 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
+  findById(id: string): Promise<User> {
+    return this.prisma.user.findFirst({
+      include: {
+        address: true,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
   createUser({ address, ...user }: CreateUserInput): Promise<User> {
     return this.prisma.user.create({
       data: {
@@ -29,5 +40,9 @@ export class UsersService {
         id,
       },
     });
+  }
+
+  findPurchases(userId: string, page: number) {
+    return this.prisma.purchase.findMany();
   }
 }
