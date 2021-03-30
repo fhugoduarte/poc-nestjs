@@ -34,5 +34,11 @@ export class PurchasesController {
   @MessagePattern('hidra.refund')
   async refundPurchase(
     @Payload() message: KafkaMessage<RefundPurchaseMessageDTO>,
-  ) {}
+  ) {
+    const purchase = await this.purchasesService.refundPurchase(
+      message.value.purchaseId,
+    );
+
+    this.client.emit(purchase.product.slug, purchase);
+  }
 }

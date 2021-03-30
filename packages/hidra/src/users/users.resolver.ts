@@ -19,7 +19,7 @@ export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
   @Query('users')
-  async getUsers() {
+  getUsers() {
     return this.usersService.findAll();
   }
 
@@ -33,7 +33,7 @@ export class UsersResolver {
   }
 
   @ResolveField()
-  async address(@Parent() user: User) {
+  address(@Parent() user: User) {
     const { addressId } = user;
 
     return this.usersService.findAddress(addressId);
@@ -41,7 +41,6 @@ export class UsersResolver {
 
   @Subscription('userCreated')
   userCreated() {
-    console.log('usuario criado');
     return pubSub.asyncIterator('userCreated');
   }
 }

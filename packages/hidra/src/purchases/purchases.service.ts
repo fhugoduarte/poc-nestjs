@@ -4,7 +4,11 @@ import { Product, Purchase } from '@prisma/client';
 import { PrismaService } from '../common/prisma.service';
 import { PurchaseMessageDTO } from './purchases.dto';
 
-export interface CreatePurchaseResponse extends Purchase {
+interface CreatePurchaseResponse extends Purchase {
+  product: Product;
+}
+
+interface RefundPurchaseResponse extends Purchase {
   product: Product;
 }
 
@@ -12,7 +16,7 @@ export interface CreatePurchaseResponse extends Purchase {
 export class PurchasesService {
   constructor(private prisma: PrismaService) {}
 
-  async createPurchase({
+  createPurchase({
     customer,
     product,
     id,
@@ -20,7 +24,7 @@ export class PurchasesService {
     const { id: slug, ...productData } = product;
     const { address, ...customerData } = customer;
 
-    const data = await this.prisma.purchase.create({
+    return this.prisma.purchase.create({
       data: {
         id,
         status: 'processed',
@@ -50,7 +54,32 @@ export class PurchasesService {
         product: true,
       },
     });
+  }
 
-    return data;
+  refundPurchase(id: string): Promise<RefundPurchaseResponse> {
+    return this.prisma.purchase.update({
+      data: {
+        status: 'canceled',
+      },
+      include: {
+        product: true,
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  findAll(): Promise<Purchase[]> {
+    return this.prisma.purchase.findMany({
+      include: {
+        customer: {
+          include: {
+            address: true,
+          },
+        },
+        product: true,
+      },
+    });
   }
 }

@@ -8,12 +8,12 @@ import { PrismaService } from '../common/prisma.service';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<User[]> {
+  findAll(): Promise<User[]> {
     return this.prisma.user.findMany();
   }
 
-  async createUser({ address, ...user }: CreateUserInput): Promise<User> {
-    const data = await this.prisma.user.create({
+  createUser({ address, ...user }: CreateUserInput): Promise<User> {
+    return this.prisma.user.create({
       data: {
         ...user,
         address: {
@@ -21,11 +21,9 @@ export class UsersService {
         },
       },
     });
-
-    return data;
   }
 
-  async findAddress(id: string): Promise<Address> {
+  findAddress(id: string): Promise<Address> {
     return this.prisma.address.findFirst({
       where: {
         id,

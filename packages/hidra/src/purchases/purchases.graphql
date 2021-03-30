@@ -1,0 +1,39 @@
+type Query {
+  purchases: [Purchase]
+  # purchase(id: String!): Purchase
+}
+
+# type Mutation {
+#   refund(createUserInput: CreateUserInput): User
+# }
+
+type Purchase {
+  id: String!
+  status: String!
+  product: Product!
+  customer: User!
+}
+
+enum ProductType {
+  onetime
+  recurring
+}
+
+type Product {
+  id: String!
+  slug: String!
+  amount: Int!
+  type: ProductType!
+}
+
+# input CreateUserInput {
+#   name: String!
+#   email: String!
+#   address: CreateAddressInput!
+# }
+
+# input CreateAddressInput {
+#   street: String!
+#   city: String!
+#   state: String!
+# }
