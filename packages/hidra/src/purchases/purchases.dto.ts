@@ -23,3 +23,8 @@ export interface PurchaseMessageDTO {
   product: Product;
   createdAt: Date;
 }
+
+export interface RefundPurchaseMessageDTO {
+  purchaseId: string;
+  createdAt: Date;
+}
