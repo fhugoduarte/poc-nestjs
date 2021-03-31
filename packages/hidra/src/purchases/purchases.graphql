@@ -3,9 +3,9 @@ type Query {
   purchase(id: String!): Purchase
 }
 
-# type Mutation {
-#   refund(createUserInput: CreateUserInput): User
-# }
+type Mutation {
+  refundPurchase(id: String!): Purchase
+}
 
 type PurchasePagination {
   data: [Purchase]!
@@ -32,15 +32,3 @@ type Product {
   amount: Int!
   type: ProductType!
 }
-
-# input CreateUserInput {
-#   name: String!
-#   email: String!
-#   address: CreateAddressInput!
-# }
-
-# input CreateAddressInput {
-#   street: String!
-#   city: String!
-#   state: String!
-# }

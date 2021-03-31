@@ -8,7 +8,7 @@ interface CreatePurchaseResponse extends Purchase {
   product: Product;
 }
 
-interface RefundPurchaseResponse extends Purchase {
+export interface RefundPurchaseResponse extends Purchase {
   product: Product;
 }
 
