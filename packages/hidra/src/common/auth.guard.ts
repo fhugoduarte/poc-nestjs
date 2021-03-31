@@ -2,6 +2,8 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 
+import { ForbiddenException } from '../exceptions/forbidden.exception';
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   canActivate(
@@ -10,6 +12,10 @@ export class AuthGuard implements CanActivate {
     const gqlContext = GqlExecutionContext.create(context);
     const request = gqlContext.getContext().req;
 
-    return !!request.get('authorization');
+    if (!request.get('authorization')) {
+      throw new ForbiddenException();
+    }
+
+    return true;
   }
 }
