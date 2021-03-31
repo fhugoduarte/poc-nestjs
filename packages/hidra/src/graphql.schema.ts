@@ -7,6 +7,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum ProductType {
+    onetime = "onetime",
+    recurring = "recurring"
+}
+
 export class CreateUserInput {
     name: string;
     email: string;
@@ -20,9 +25,36 @@ export class CreateAddressInput {
 }
 
 export abstract class IQuery {
+    abstract purchases(page?: number): PurchasePagination | Promise<PurchasePagination>;
+
+    abstract purchase(id: string): Purchase | Promise<Purchase>;
+
     abstract users(): User[] | Promise<User[]>;
 
+    abstract user(id: string): User | Promise<User>;
+
     abstract address(): Address | Promise<Address>;
+}
+
+export class PurchasePagination {
+    data: Purchase[];
+    page: number;
+    perPage: number;
+    total: number;
+}
+
+export class Purchase {
+    id: string;
+    status: string;
+    product: Product;
+    customer: User;
+}
+
+export class Product {
+    id: string;
+    slug: string;
+    amount: number;
+    type: ProductType;
 }
 
 export abstract class IMutation {
@@ -38,6 +70,7 @@ export class User {
     name: string;
     email: string;
     address: Address;
+    purchases?: Purchase[];
 }
 
 export class Address {

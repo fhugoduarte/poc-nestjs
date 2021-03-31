@@ -8,10 +8,10 @@ type Query {
 # }
 
 type PurchasePagination {
-  data: [Purchase]
-  page: Int
-  perPage: Int
-  total: Int
+  data: [Purchase]!
+  page: Int!
+  perPage: Int!
+  total: Int!
 }
 
 type Purchase {
