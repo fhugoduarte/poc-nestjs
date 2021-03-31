@@ -12,24 +12,12 @@ export enum ProductType {
     recurring = "recurring"
 }
 
-export class CreateUserInput {
-    name: string;
-    email: string;
-    address: CreateAddressInput;
-}
-
-export class CreateAddressInput {
-    street: string;
-    city: string;
-    state: string;
-}
-
 export abstract class IQuery {
-    abstract purchases(page?: number): PurchasePagination | Promise<PurchasePagination>;
+    abstract purchases(page?: number, perPage?: number): PurchasePagination | Promise<PurchasePagination>;
 
     abstract purchase(id: string): Purchase | Promise<Purchase>;
 
-    abstract users(): User[] | Promise<User[]>;
+    abstract users(page?: number, perPage?: number): UserPagination | Promise<UserPagination>;
 
     abstract user(id: string): User | Promise<User>;
 
@@ -57,12 +45,11 @@ export class Product {
     type: ProductType;
 }
 
-export abstract class IMutation {
-    abstract createUser(createUserInput?: CreateUserInput): User | Promise<User>;
-}
-
-export abstract class ISubscription {
-    abstract userCreated(): User | Promise<User>;
+export class UserPagination {
+    data: User[];
+    page: number;
+    perPage: number;
+    total: number;
 }
 
 export class User {

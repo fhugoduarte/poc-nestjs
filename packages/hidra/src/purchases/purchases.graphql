@@ -1,5 +1,5 @@
 type Query {
-  purchases(page: Int): PurchasePagination
+  purchases(page: Int, perPage: Int): PurchasePagination
   purchase(id: String!): Purchase
 }
 

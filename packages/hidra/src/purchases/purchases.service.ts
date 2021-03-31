@@ -12,7 +12,7 @@ interface RefundPurchaseResponse extends Purchase {
   product: Product;
 }
 
-interface Pagination {
+export interface PurchasePagination {
   data: Purchase[];
   page: number;
   total: number;
@@ -77,10 +77,10 @@ export class PurchasesService {
     });
   }
 
-  async findAll(page = 1): Promise<Pagination> {
+  async findAll(page = 1, perPage = 10): Promise<PurchasePagination> {
     const options = {
-      take: 10,
-      skip: (page - 1) * 10,
+      take: perPage,
+      skip: (page - 1) * perPage,
       include: {
         customer: {
           include: {
@@ -98,7 +98,7 @@ export class PurchasesService {
 
     return {
       page,
-      perPage: 10,
+      perPage,
       data: purchases,
       total,
     };

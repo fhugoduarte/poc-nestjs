@@ -1,15 +1,14 @@
 type Query {
-  users: [User]
+  users(page: Int, perPage: Int): UserPagination
   user(id: String!): User
   address: Address
 }
 
-type Mutation {
-  createUser(createUserInput: CreateUserInput): User
-}
-
-type Subscription {
-  userCreated: User
+type UserPagination {
+  data: [User]!
+  page: Int!
+  perPage: Int!
+  total: Int!
 }
 
 type User {
@@ -17,23 +16,11 @@ type User {
   name: String!
   email: String!
   address: Address!
-  purchases(page: Int): [Purchase]
+  purchases: [Purchase]
 }
 
 type Address {
   id: String!
-  street: String!
-  city: String!
-  state: String!
-}
-
-input CreateUserInput {
-  name: String!
-  email: String!
-  address: CreateAddressInput!
-}
-
-input CreateAddressInput {
   street: String!
   city: String!
   state: String!

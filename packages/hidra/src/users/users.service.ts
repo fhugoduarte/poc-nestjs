@@ -1,48 +1,53 @@
 import { Injectable } from '@nestjs/common';
-import { User, Address } from '@prisma/client';
-import { CreateUserInput } from '../graphql.schema';
+import { User } from '@prisma/client';
 
 import { PrismaService } from '../common/prisma.service';
+
+export interface UserPagination {
+  data: User[];
+  page: number;
+  total: number;
+  perPage: number;
+}
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+  async findAll(page = 1, perPage = 10): Promise<UserPagination> {
+    const [total, users] = await Promise.all([
+      this.prisma.user.count(),
+      this.prisma.user.findMany({
+        take: perPage,
+        skip: (page - 1) * perPage,
+        include: {
+          address: true,
+          purchases: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      }),
+    ]);
+
+    return {
+      page,
+      perPage,
+      data: users,
+      total,
+    };
   }
 
   findById(id: string): Promise<User> {
     return this.prisma.user.findFirst({
       include: {
         address: true,
+        purchases: true,
       },
       where: {
         id,
       },
     });
-  }
-
-  createUser({ address, ...user }: CreateUserInput): Promise<User> {
-    return this.prisma.user.create({
-      data: {
-        ...user,
-        address: {
-          create: address,
-        },
-      },
-    });
-  }
-
-  findAddress(id: string): Promise<Address> {
-    return this.prisma.address.findFirst({
-      where: {
-        id,
-      },
-    });
-  }
-
-  findPurchases(userId: string, page: number) {
-    return this.prisma.purchase.findMany();
   }
 }
