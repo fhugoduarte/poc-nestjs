@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Product, Purchase } from '@prisma/client';
 
 import { PrismaService } from '../common/prisma.service';
-import { PurchaseMessageDTO } from './purchases.dto';
+import { CreatePurchaseDTO } from './dtos/create-purchase.dto';
+import { PurchasesServiceContract } from './interfaces/purchases.interface';
 
 interface CreatePurchaseResponse extends Purchase {
   product: Product;
@@ -20,14 +21,14 @@ export interface PurchasePagination {
 }
 
 @Injectable()
-export class PurchasesService {
+export class PurchasesService implements PurchasesServiceContract {
   constructor(private prisma: PrismaService) {}
 
   createPurchase({
     customer,
     product,
     id,
-  }: PurchaseMessageDTO): Promise<CreatePurchaseResponse> {
+  }: CreatePurchaseDTO): Promise<CreatePurchaseResponse> {
     const { id: slug, ...productData } = product;
     const { address, ...customerData } = customer;
 

@@ -7,7 +7,8 @@ import {
   Transport,
 } from '@nestjs/microservices';
 
-import { PurchaseMessageDTO, RefundPurchaseMessageDTO } from './purchases.dto';
+import { CreatePurchaseDTO } from './dtos/create-purchase.dto';
+import { RefundPurchaseDTO } from './dtos/refund-purchase.dto';
 import { PurchasesService } from './purchases.service';
 
 interface KafkaMessage<T> {
@@ -25,16 +26,14 @@ export class PurchasesController {
   constructor(private readonly purchasesService: PurchasesService) {}
 
   @MessagePattern('hidra.purchase')
-  async receivePurchase(@Payload() message: KafkaMessage<PurchaseMessageDTO>) {
+  async receivePurchase(@Payload() message: KafkaMessage<CreatePurchaseDTO>) {
     const purchase = await this.purchasesService.createPurchase(message.value);
 
     this.client.emit(purchase.product.slug, purchase);
   }
 
   @MessagePattern('hidra.refund')
-  async refundPurchase(
-    @Payload() message: KafkaMessage<RefundPurchaseMessageDTO>,
-  ) {
+  async refundPurchase(@Payload() message: KafkaMessage<RefundPurchaseDTO>) {
     const purchase = await this.purchasesService.refundPurchase(
       message.value.purchaseId,
     );

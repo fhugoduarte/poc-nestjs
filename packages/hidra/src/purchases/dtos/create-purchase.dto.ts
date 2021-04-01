@@ -17,14 +17,9 @@ interface Product {
   type: 'onetime' | 'recurring';
 }
 
-export interface PurchaseMessageDTO {
+export interface CreatePurchaseDTO {
   id: string;
   customer: Customer;
   product: Product;
-  createdAt: Date;
-}
-
-export interface RefundPurchaseMessageDTO {
-  purchaseId: string;
   createdAt: Date;
 }
