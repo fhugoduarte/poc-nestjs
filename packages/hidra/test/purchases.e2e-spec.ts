@@ -1,40 +1,46 @@
 import * as request from 'supertest';
 import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-
-// import { PurchasesService } from '../src/purchases/purchases.service';
 import { CommonModule } from '../src/common/common.module';
 import { PurchasesModule } from '../src/purchases/purchases.module';
-// import { AppModule } from '../src/app.module';
+
+import { UsersFactory } from './factories/users.factory';
+import { PurchasesFactory } from './factories/purchases.factory';
+import { ProductsFactory } from './factories/product.factory';
+import { Product, User } from '.prisma/client';
 
 describe('Purchases', () => {
   let app: INestApplication;
-  /*   const purchasesService = {
-    findAll: () => ({
-      data: [],
-      page: 1,
-      perPage: 10,
-      total: 0,
-    }),
-  };
- */
+
+  let usersFactory: UsersFactory;
+  let purchasesFactory: PurchasesFactory;
+  let productsFactory: ProductsFactory;
+
+  let user: User;
+  let product: Product;
+
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [
-        /*  ConfigModule.forRoot({
-          envFilePath: '.env.testing',
-          isGlobal: true,
-        }), */
         CommonModule,
         PurchasesModule,
+        PurchasesFactory,
+        UsersFactory,
+        ProductsFactory,
       ],
-    })
-      /* .overrideProvider(PurchasesService)
-      .useValue(purchasesService) */
-      .compile();
+    }).compile();
 
     app = moduleRef.createNestApplication();
+
+    usersFactory = moduleRef.get(UsersFactory);
+    purchasesFactory = moduleRef.get(PurchasesFactory);
+    productsFactory = moduleRef.get(ProductsFactory);
+
+    [user, product] = await Promise.all([
+      usersFactory.makeUser(),
+      productsFactory.makeProduct(),
+    ]);
+
     await app.init();
   });
 
@@ -68,6 +74,11 @@ describe('Purchases', () => {
   });
 
   it('should get the purchases', async () => {
+    const purchase = await purchasesFactory.makePurchase({
+      userId: user.id,
+      productId: product.id,
+    });
+
     const response = await request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -85,12 +96,19 @@ describe('Purchases', () => {
         `,
       })
       .set('authorization', 'dale');
-    // .expect(200)
-    // .expect({
-    //   data: {
-    //     purchases: [],
-    //   },
-    // });
+
+    expect(response.body.data).toMatchObject({
+      purchases: {
+        data: [
+          {
+            id: purchase.id,
+          },
+        ],
+        page: 1,
+        perPage: 10,
+        total: 1,
+      },
+    });
   });
 
   afterAll(async () => {
