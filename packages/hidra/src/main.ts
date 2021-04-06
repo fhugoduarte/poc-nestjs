@@ -18,7 +18,7 @@ async function bootstrap() {
   await app.startAllMicroservicesAsync();
   console.log('On fire, babado!');
 
-  await app.listen(3333, () => {
+  await app.listen(process.env.APP_PORT, () => {
     console.log('Namoradinha!');
   });
 }
