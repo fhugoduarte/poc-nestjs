@@ -14,14 +14,18 @@ export interface UserPagination {
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(page = 1, perPage = 10): Promise<UserPagination> {
+  async findAll(
+    page = 1,
+    perPage = 10,
+    fields: string[] = [],
+  ): Promise<UserPagination> {
     const [total, users] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.user.findMany({
         take: perPage,
         skip: (page - 1) * perPage,
         include: {
-          address: true,
+          address: fields.includes('address'),
           purchases: {
             include: {
               product: true,
