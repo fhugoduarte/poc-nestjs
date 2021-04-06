@@ -111,6 +111,115 @@ describe('Purchases', () => {
     });
   });
 
+  it('should get a purchase by id', async () => {
+    const purchase = await purchasesFactory.makePurchase({
+      userId: user.id,
+      productId: product.id,
+    });
+
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: `
+          query purchaseData($purchaseId: String!) {
+            purchase(id: $purchaseId) {
+              id
+            }
+          }
+        `,
+        variables: {
+          purchaseId: purchase.id,
+        },
+      })
+      .set('authorization', 'dale');
+
+    expect(response.body.data).toMatchObject({
+      purchase: {
+        id: purchase.id,
+      },
+    });
+  });
+
+  it('should get an exception', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: `
+        query purchaseData($purchaseId: String!) {
+          purchase(id: $purchaseId) {
+            id
+          }
+        }
+      `,
+      })
+      .set('authorization', 'dale');
+
+    expect(response.body).toMatchObject({
+      errors: [
+        {
+          message:
+            'Variable "$purchaseId" of required type "String!" was not provided.',
+        },
+      ],
+    });
+  });
+
+  it('should not get a purchase by id when that doest not exist', async () => {
+    await purchasesFactory.makePurchase({
+      userId: user.id,
+      productId: product.id,
+    });
+
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: `
+          query purchaseData($purchaseId: String!) {
+            purchase(id: $purchaseId) {
+              id
+            }
+          }
+        `,
+        variables: {
+          purchaseId: user.id,
+        },
+      })
+      .set('authorization', 'dale');
+
+    expect(response.body.data).toMatchObject({
+      purchase: null,
+    });
+  });
+
+  it('should refund a purchase', async () => {
+    const purchase = await purchasesFactory.makePurchase({
+      userId: user.id,
+      productId: product.id,
+    });
+
+    const response = await request(app.getHttpServer())
+      .post('/graphql')
+      .send({
+        query: `
+          mutation RefundPurchase($purchaseId: String!) {
+            refundPurchase(id: $purchaseId) {
+              status
+            }
+          }
+        `,
+        variables: {
+          purchaseId: purchase.id,
+        },
+      })
+      .set('authorization', 'dale');
+
+    expect(response.body.data).toMatchObject({
+      refundPurchase: {
+        status: 'canceled',
+      },
+    });
+  });
+
   afterAll(async () => {
     await app.close();
   });
