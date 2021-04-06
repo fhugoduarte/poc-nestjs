@@ -2,6 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
+import { KafkaClient } from './kafka.client';
 
 const environmentFiles = {
   test: '.testing.env',
@@ -24,8 +25,9 @@ const envFilePath = environmentFiles[process.env.NODE_ENV];
       playground: true,
       installSubscriptionHandlers: true,
     }),
+    KafkaClient,
   ],
   providers: [PrismaService],
-  exports: [PrismaService],
+  exports: [PrismaService, KafkaClient],
 })
 export class CommonModule {}

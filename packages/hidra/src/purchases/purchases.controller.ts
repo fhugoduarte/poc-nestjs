@@ -1,11 +1,5 @@
-import { Controller } from '@nestjs/common';
-import {
-  Client,
-  ClientKafka,
-  MessagePattern,
-  Payload,
-  Transport,
-} from '@nestjs/microservices';
+import { Controller, Inject, OnModuleInit } from '@nestjs/common';
+import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CreatePurchaseDTO } from './dtos/create-purchase.dto';
 import { RefundPurchaseDTO } from './dtos/refund-purchase.dto';
@@ -16,20 +10,22 @@ interface KafkaMessage<T> {
 }
 
 @Controller()
-export class PurchasesController {
-  @Client({
-    transport: Transport.KAFKA,
-    options: { client: { brokers: ['localhost:9092'] } },
-  })
-  private client: ClientKafka;
+export class PurchasesController implements OnModuleInit {
+  constructor(
+    private readonly purchasesService: PurchasesService,
+    @Inject('KAFKA_SERVICE')
+    private kafkaClient: ClientKafka,
+  ) {}
 
-  constructor(private readonly purchasesService: PurchasesService) {}
+  async onModuleInit() {
+    await this.kafkaClient.connect();
+  }
 
   @MessagePattern('hidra.purchase')
   async receivePurchase(@Payload() message: KafkaMessage<CreatePurchaseDTO>) {
     const purchase = await this.purchasesService.createPurchase(message.value);
 
-    this.client.emit(purchase.product.slug, purchase);
+    this.kafkaClient.emit(purchase.product.slug, purchase);
   }
 
   @MessagePattern('hidra.refund')
@@ -38,6 +34,6 @@ export class PurchasesController {
       message.value.purchaseId,
     );
 
-    this.client.emit(purchase.product.slug, purchase);
+    this.kafkaClient.emit(purchase.product.slug, purchase);
   }
 }

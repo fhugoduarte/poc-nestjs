@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { Inject, OnModuleInit, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { Client, ClientKafka, Transport } from '@nestjs/microservices';
 import { AuthGuard } from '../common/auth.guard';
@@ -7,14 +7,16 @@ import { PurchasesService } from './purchases.service';
 
 @Resolver('Purchase')
 @UseGuards(AuthGuard)
-export class PurchasesResolver {
-  @Client({
-    transport: Transport.KAFKA,
-    options: { client: { brokers: ['localhost:9092'] } },
-  })
-  private client: ClientKafka;
+export class PurchasesResolver implements OnModuleInit {
+  constructor(
+    private readonly purchasesService: PurchasesService,
+    @Inject('KAFKA_SERVICE')
+    private kafkaClient: ClientKafka,
+  ) {}
 
-  constructor(private readonly purchasesService: PurchasesService) {}
+  async onModuleInit() {
+    await this.kafkaClient.connect();
+  }
 
   @Query('purchases')
   getPurchases(@Args('page') page: number) {
@@ -30,7 +32,7 @@ export class PurchasesResolver {
   async refundPurchase(@Args('id') id: string) {
     const purchase = await this.purchasesService.refundPurchase(id);
 
-    this.client.emit(purchase.product.slug, purchase);
+    this.kafkaClient.emit(purchase.product.slug, purchase);
 
     return purchase;
   }
