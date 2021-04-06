@@ -1,26 +1,22 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { Transport } from '@nestjs/microservices';
 
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const appKafka = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    {
-      transport: Transport.KAFKA,
-      options: {
-        client: {
-          brokers: ['localhost:9092'],
-        },
+  const app = await NestFactory.create(AppModule);
+
+  app.connectMicroservice({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        brokers: [process.env.KAFKA_BROKER],
       },
     },
-  );
-
-  appKafka.listen(() => {
-    console.log('On fire, babado!');
   });
 
-  const app = await NestFactory.create(AppModule);
+  await app.startAllMicroservicesAsync();
+  console.log('On fire, babado!');
 
   await app.listen(3333, () => {
     console.log('Namoradinha!');
