@@ -1,4 +1,4 @@
-import { Controller, Inject, OnModuleInit } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CreatePurchaseDTO } from './dtos/create-purchase.dto';
@@ -10,16 +10,12 @@ interface KafkaMessage<T> {
 }
 
 @Controller()
-export class PurchasesController implements OnModuleInit {
+export class PurchasesController {
   constructor(
     private readonly purchasesService: PurchasesService,
     @Inject('KAFKA_SERVICE')
     private kafkaClient: ClientKafka,
   ) {}
-
-  async onModuleInit() {
-    await this.kafkaClient.connect();
-  }
 
   @MessagePattern('hidra.purchase')
   async receivePurchase(@Payload() message: KafkaMessage<CreatePurchaseDTO>) {
