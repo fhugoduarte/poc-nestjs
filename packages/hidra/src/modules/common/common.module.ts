@@ -6,21 +6,10 @@ import { PrismaService } from '@services/prisma.service';
 
 import { KafkaModule } from './kafka.module';
 
-const environmentFiles = {
-  test: '.env.testing',
-  development: '.env.development',
-  production: '.env',
-};
-
-const envFilePath = environmentFiles[process.env.NODE_ENV];
-
-console.log('NODE_ENV', process.env.NODE_ENV);
-
 @Global()
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath,
       isGlobal: true,
     }),
     GraphQLModule.forRoot({
