@@ -24,6 +24,10 @@ export abstract class IQuery {
     abstract address(): Address | Promise<Address>;
 }
 
+export abstract class IMutation {
+    abstract refundPurchase(id: string): Purchase | Promise<Purchase>;
+}
+
 export class PurchasePagination {
     data: Purchase[];
     page: number;

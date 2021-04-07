@@ -1,8 +1,12 @@
+import { GraphQLResolveInfo } from 'graphql';
+import * as graphqlFields from 'graphql-fields';
+
 import { UseGuards } from '@nestjs/common';
 import { Args, Info, Query, Resolver } from '@nestjs/graphql';
-import { AuthGuard } from '../common/auth.guard';
+
+import { AuthGuard } from '@guards/auth.guard';
+
 import { UsersService } from './users.service';
-import * as graphqlFields from 'graphql-fields';
 
 @Resolver('User')
 @UseGuards(AuthGuard)
@@ -13,7 +17,7 @@ export class UsersResolver {
   getUsers(
     @Args('page') page: number,
     @Args('perPage') perPage: number,
-    @Info() info,
+    @Info() info: GraphQLResolveInfo,
   ) {
     const topLevelFields = Object.keys(graphqlFields(info).data);
 

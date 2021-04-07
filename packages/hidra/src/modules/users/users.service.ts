@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
-import { PrismaService } from '../common/prisma.service';
+import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from '@services/prisma.service';
 
 export interface UserPagination {
   data: User[];

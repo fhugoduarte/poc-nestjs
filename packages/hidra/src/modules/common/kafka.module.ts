@@ -1,6 +1,6 @@
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-export const KafkaClient = ClientsModule.register([
+export const KafkaModule = ClientsModule.register([
   {
     name: 'KAFKA_SERVICE',
     transport: Transport.KAFKA,

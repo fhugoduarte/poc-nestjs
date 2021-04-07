@@ -1,7 +1,8 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ClientKafka } from '@nestjs/microservices';
-import { AuthGuard } from '../common/auth.guard';
+
+import { AuthGuard } from '@guards/auth.guard';
 
 import { PurchasesService } from './purchases.service';
 

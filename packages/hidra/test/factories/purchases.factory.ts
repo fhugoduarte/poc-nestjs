@@ -1,6 +1,8 @@
-import { Purchase } from '.prisma/client';
+import { Purchase } from '@prisma/client';
+
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../src/common/prisma.service';
+
+import { PrismaService } from '@services/prisma.service';
 
 interface MakePurchaseDTO {
   id?: string;

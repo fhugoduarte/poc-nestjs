@@ -1,16 +1,20 @@
 import { Global, Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
-import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
-import { KafkaClient } from './kafka.client';
+import { GraphQLModule } from '@nestjs/graphql';
+
+import { PrismaService } from '@services/prisma.service';
+
+import { KafkaModule } from './kafka.module';
 
 const environmentFiles = {
-  test: '.testing.env',
-  development: '.development.env',
+  test: '.env.testing',
+  development: '.env.development',
   production: '.env',
 };
 
 const envFilePath = environmentFiles[process.env.NODE_ENV];
+
+console.log('NODE_ENV', process.env.NODE_ENV);
 
 @Global()
 @Module({
@@ -25,9 +29,9 @@ const envFilePath = environmentFiles[process.env.NODE_ENV];
       playground: true,
       installSubscriptionHandlers: true,
     }),
-    KafkaClient,
+    KafkaModule,
   ],
   providers: [PrismaService],
-  exports: [PrismaService, KafkaClient],
+  exports: [PrismaService, KafkaModule],
 })
 export class CommonModule {}

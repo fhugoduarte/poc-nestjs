@@ -1,8 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { GqlExecutionContext } from '@nestjs/graphql';
 import { Observable } from 'rxjs';
 
-import { ForbiddenException } from '../exceptions/forbidden.exception';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { GqlExecutionContext } from '@nestjs/graphql';
+
+import { ForbiddenException } from '@exceptions/forbidden.exception';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
 import { Product, Purchase } from '@prisma/client';
 
-import { PrismaService } from '../common/prisma.service';
+import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from '@services/prisma.service';
+
 import { CreatePurchaseDTO } from './dtos/create-purchase.dto';
 import { PurchasesServiceContract } from './interfaces/purchases.interface';
 

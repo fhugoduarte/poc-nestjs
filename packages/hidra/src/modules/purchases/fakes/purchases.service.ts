@@ -1,4 +1,4 @@
-import { Purchase } from '.prisma/client';
+import { Purchase } from '@prisma/client';
 import * as faker from 'faker';
 
 import { CreatePurchaseDTO } from '../dtos/create-purchase.dto';

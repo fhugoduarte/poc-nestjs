@@ -1,4 +1,5 @@
 import { Product, Purchase } from '@prisma/client';
+
 import { CreatePurchaseDTO } from '../dtos/create-purchase.dto';
 
 export interface CreatePurchaseResponse extends Purchase {

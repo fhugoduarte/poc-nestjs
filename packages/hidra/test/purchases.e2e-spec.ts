@@ -1,13 +1,15 @@
+import { Product, User } from '@prisma/client';
 import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { CommonModule } from '../src/common/common.module';
-import { PurchasesModule } from '../src/purchases/purchases.module';
 
-import { UsersFactory } from './factories/users.factory';
-import { PurchasesFactory } from './factories/purchases.factory';
+import { INestApplication } from '@nestjs/common';
+import { Test } from '@nestjs/testing';
+
+import { CommonModule } from '@modules/common/common.module';
+import { PurchasesModule } from '@modules/purchases/purchases.module';
+
 import { ProductsFactory } from './factories/product.factory';
-import { Product, User } from '.prisma/client';
+import { PurchasesFactory } from './factories/purchases.factory';
+import { UsersFactory } from './factories/users.factory';
 
 describe('Purchases', () => {
   let app: INestApplication;

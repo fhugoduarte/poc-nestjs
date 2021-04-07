@@ -1,7 +1,9 @@
-import { Product } from '.prisma/client';
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../src/common/prisma.service';
+import { Product } from '@prisma/client';
 import * as faker from 'faker';
+
+import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from '@services/prisma.service';
 
 type MakeProductDTO = Omit<Product, 'id'>;
 

@@ -1,8 +1,10 @@
 import * as request from 'supertest';
-import { Test } from '@nestjs/testing';
+
 import { INestApplication } from '@nestjs/common';
-import { CommonModule } from '../src/common/common.module';
-import { UsersModule } from '../src/users/users.module';
+import { Test } from '@nestjs/testing';
+
+import { CommonModule } from '@modules/common/common.module';
+import { UsersModule } from '@modules/users/users.module';
 
 import { UsersFactory } from './factories/users.factory';
 
